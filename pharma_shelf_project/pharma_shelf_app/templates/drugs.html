@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PharmaShelf - Drugs Catalog</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="pharma-sidebar-open">
+<nav class="navbar navbar-dark navbar-expand-sm pharma-navbar">
+    <div class="container-fluid">
+        <button type="button" class="btn btn-link text-white me-2 p-0 pharma-sidebar-toggle">
+            <span class="pharma-hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+        </button>
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'drugs' %}">
+            <img src="{% static 'img/pharma_logo.png' %}" alt="PharmaShelf" class="pharma-logo me-2">
+            <span>PharmaShelf</span>
+        </a>
+
+        <div class="ms-auto d-flex align-items-center">
+            <div class="pharma-user-menu">
+                <button type="button" class="btn pharma-user-toggle">
+                    <span class="pharma-user-avatar">
+                        {{ current_user.name|slice:":1"|upper }}
+                    </span>
+                    <span class="pharma-user-name d-none d-sm-inline">
+                        {{ current_user.name }}
+                    </span>
+                    <span class="pharma-user-caret">▼</span>
+                </button>
+                <div class="pharma-user-dropdown">
+                    <a href="{% url 'profile' %}" class="pharma-user-dropdown-item">My Profile</a>
+                    <a href="{% url 'logout' %}" class="pharma-user-dropdown-item">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="pharma-layout">
+    <aside class="pharma-sidebar">
+        <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                <a class="nav-link " href="{% url 'dashboard' %}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'drugs' %}">Drugs Catalog</a>
+            </li>
+            {% if current_user.role == "admin" %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'add_drug' %}">Add Drug</a>
+            </li>
+           
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'categories' %}">Categories</a>
+            </li>
+             {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'interaction_checker' %}">Interaction Checker</a>
+            </li>
+            {% if current_user.role == "admin" %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'add_interaction' %}">Add Interaction</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'user_management' %}">User Management</a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'about' %}">About PharmaShelf</a>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="pharma-main">
+        <div class="container-fluid py-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Drugs Catalog</h1>
+                {% if current_user.role == "admin" %}
+                    <a href="{% url 'add_drug' %}" class="btn btn-primary btn-sm">Add New Drug</a>
+                {% endif %}
+            </div>
+
+            <section class="mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="get" action="{% url 'drugs' %}" class="row g-3 align-items-end">
+                            <div class="col-md-4">
+                                <label class="form-label">Search by name</label>
+                                <input type="text"
+                                       name="q"
+                                       class="form-control"
+                                       value="{{ search_query }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Category</label>
+                                <select name="category_id" class="form-select">
+                                    <option value="">All categories</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}"
+                                                {% if selected_category_id == category.id %}selected{% endif %}>
+                                            {{ category.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-check mt-4 pt-1">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="in_stock_only"
+                                           id="in_stock_only"
+                                           {% if in_stock_only %}checked{% endif %}>
+                                    <label class="form-check-label" for="in_stock_only">
+                                        In stock only
+                                    </label>
+                                </div>
+                            </div>
+                        <div class="col-md-3 d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary flex-fill">Search</button>
+                            <a href="{% url 'drugs' %}" class="btn btn-outline-secondary flex-fill">Clear</a>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped align-middle">
+                                <thead class="table-light">
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Active Ingredient</th>
+                                    <th scope="col">Dosage Form</th>
+                                    <th scope="col">Stock</th>
+                                    <th scope="col" class="text-end">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for drug in drugs %}
+                                    <tr>
+                                        <td>{{ drug.name }}</td>
+                                        <td>
+                                            {% if drug.category %}
+                                                {{ drug.category.name }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ drug.active_ingredient }}</td>
+                                        <td>{{ drug.dosage_form }}</td>
+                                        <td>
+                                            {% if drug.stock_quantity > 0 %}
+                                                <span class="badge bg-success">In Stock ({{ drug.stock_quantity }})</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Out of Stock</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end">
+                                            <a href="{% url 'drug_details' drug.id %}" class="btn btn-outline-primary btn-sm">View</a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">No drugs found.</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {% if total_pages > 1 %}
+                        <nav class="mt-3">
+                            <ul class="pagination justify-content-center">
+                                {% if has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="?page={{ page|add:"-1" }}{% if search_query %}&q={{ search_query }}{% endif %}{% if selected_category_id %}&category_id={{ selected_category_id }}{% endif %}{% if in_stock_only %}&in_stock_only=on{% endif %}">
+                                        Previous
+                                    </a>
+                                </li>
+                                {% endif %}
+
+                                {% for p in page_numbers %}
+                                <li class="page-item {% if p == page %}active{% endif %}">
+                                    <a class="page-link"
+                                    href="?page={{ p }}{% if search_query %}&q={{ search_query }}{% endif %}{% if selected_category_id %}&category_id={{ selected_category_id }}{% endif %}{% if in_stock_only %}&in_stock_only=on{% endif %}">
+                                        {{ p }}
+                                    </a>
+                                </li>
+                                {% endfor %}
+
+                                {% if has_next %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="?page={{ page|add:"1" }}{% if search_query %}&q={{ search_query }}{% endif %}{% if selected_category_id %}&category_id={{ selected_category_id }}{% endif %}{% if in_stock_only %}&in_stock_only=on{% endif %}">
+                                        Next
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+</div>
+
+<footer class="pharma-footer">
+    <div class="container-fluid text-center">
+        <span>PharmaShelf</span>
+        <span class="pharma-footer-separator">•</span>
+        <a href="{% url 'about' %}" class="pharma-footer-link">About PharmaShelf</a>
+    </div>
+</footer>
+
+<script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

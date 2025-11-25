@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PharmaShelf - About</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="pharma-sidebar-open">
+<nav class="navbar navbar-dark navbar-expand-sm pharma-navbar">
+    <div class="container-fluid">
+        <button type="button" class="btn btn-link text-white me-2 p-0 pharma-sidebar-toggle">
+            <span class="pharma-hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+        </button>
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'drugs' %}">
+            <img src="{% static 'img/pharma_logo.png' %}" alt="PharmaShelf" class="pharma-logo me-2">
+            <span>PharmaShelf</span>
+        </a>
+        <div class="ms-auto d-flex align-items-center">
+            <div class="pharma-user-menu">
+                <button type="button" class="btn pharma-user-toggle">
+                    <span class="pharma-user-avatar">
+                        {{ current_user.name|slice:":1"|upper }}
+                    </span>
+                    <span class="pharma-user-name d-none d-sm-inline">
+                        {{ current_user.name }}
+                    </span>
+                    <span class="pharma-user-caret">▼</span>
+                </button>
+                <div class="pharma-user-dropdown">
+                    <a href="{% url 'profile' %}" class="pharma-user-dropdown-item">My Profile</a>
+                    <a href="{% url 'logout' %}" class="pharma-user-dropdown-item">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="pharma-layout">
+    <aside class="pharma-sidebar">
+        <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                <a class="nav-link " href="{% url 'dashboard' %}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'drugs' %}">Drugs Catalog</a>
+            </li>
+            {% if current_user.role == "admin" %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'add_drug' %}">Add Drug</a>
+            </li>
+           
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'categories' %}">Categories</a>
+            </li>
+             {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'interaction_checker' %}">Interaction Checker</a>
+            </li>
+             {% if current_user.role == "admin" %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'add_interaction' %}">Add Interaction</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'user_management' %}">User Management</a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'about' %}">About PharmaShelf</a>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="pharma-main">
+        <div class="container-fluid py-4">
+            <h1 class="h3 mb-4">About PharmaShelf</h1>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="mb-3">
+                        PharmaShelf is a simple web application designed to help pharmacy teams quickly look up basic drug
+                        information, check stock availability, review alternatives, and perform basic interaction checks.
+                    </p>
+                    <p class="mb-3">
+                        This project was developed by <strong>Dalia Alkassaboghly</strong> as part of the
+                        <strong>AXSOS Full Stack training program</strong>. It combines the concept of full stack development concepts including database design, Django, HTML/CSS,
+                        and basic UI/UX.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<footer class="pharma-footer">
+    <div class="container-fluid text-center">
+        <span>All rights reserved - PharmaShelf</span>
+        <span class="pharma-footer-separator">•</span>
+        <a href="{% url 'about' %}" class="pharma-footer-link">About PharmaShelf</a>
+    </div>
+</footer>
+<script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

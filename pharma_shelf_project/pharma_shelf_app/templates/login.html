@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PharmaShelf - Login</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="pharma-login-body">
+    <div class="container d-flex align-items-center justify-content-center flex-grow-1">
+        <div class="card pharma-auth-card shadow-lg">
+            <div class="row g-0">
+                <div class="col-lg-6 d-none d-lg-block pharma-auth-visual">
+                    <video src="{% static 'videos/pharmacy-auth.mp4' %}" autoplay loop muted playsinline
+                        class="pharma-auth-image"></video>
+                </div>
+                <div class="col-lg-6">
+                    <div class="pharma-auth-body">
+                        <div class="mb-4">
+                            <div class="pharma-auth-title mb-1">PharmaShelf</div>
+                            <h1 class="h4 pharma-auth-heading mb-2">Sign in to your account</h1>
+                            <p class="pharma-auth-subtitle mb-0">
+                                Secure access to your pharmacy drug catalog and interaction checks.
+                            </p>
+                        </div>
+
+                        {% if messages %}
+                        <div class="mb-3">
+                            {% for message in messages %}
+                            <div class="alert alert-danger py-2 mb-2">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <form method="post" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" placeholder="you@example.com">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-control" name="password"
+                                    placeholder="Enter your password">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+                        </form>
+
+                        <div class="text-center">
+                            <a href="{% url 'signup' %}" class="pharma-link-small">Don’t have an account? Sign up</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="pharma-footer">
+        <div class="container-fluid text-center">
+            <span>All rights reserved - PharmaShelf</span>
+            <span class="pharma-footer-separator">•</span>
+            <a href="{% url 'about' %}" class="pharma-footer-link">About PharmaShelf</a>
+        </div>
+</footer>
+</body>
+
+</html>

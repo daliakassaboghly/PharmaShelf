@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Drug Out Of Stock</title>
+</head>
+<body style="margin:0;padding:0;background-color:#0f172a;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+    <div style="max-width:600px;margin:0 auto;padding:24px;">
+        <div style="background-color:#020617;border-radius:12px;padding:24px;">
+            <div style="text-align:center;margin-bottom:24px;">
+                <div style="display:inline-block;padding:8px 16px;border-radius:999px;background:linear-gradient(90deg,#1d4ed8,#60a5fa);color:#f9fafb;font-weight:600;font-size:14px;">
+                    PharmaShelf Alert
+                </div>
+                <h1 style="color:#e5e7eb;font-size:20px;margin:16px 0 4px 0;">
+                    Drug Out Of Stock
+                </h1>
+                <p style="color:#9ca3af;font-size:14px;margin:0;">
+                    A drug in your catalog requires attention.
+                </p>
+            </div>
+
+            <div style="background-color:#020617;border-radius:12px;border:1px solid #1f2937;padding:16px;margin-bottom:16px;">
+                <p style="color:#d1d5db;font-size:14px;margin:0 0 12px 0;">
+                    The following drug has reached a stock level of zero:
+                </p>
+                <table style="width:100%;border-collapse:collapse;">
+                    <tr>
+                        <td style="color:#9ca3af;font-size:13px;padding:4px 0;width:120px;">Drug name</td>
+                        <td style="color:#f9fafb;font-size:13px;padding:4px 0;">{{ drug.name }}</td>
+                    </tr>
+                    <tr>
+                        <td style="color:#9ca3af;font-size:13px;padding:4px 0;">Category</td>
+                        <td style="color:#f9fafb;font-size:13px;padding:4px 0;">
+                            {% if drug.category %}
+                                {{ drug.category.name }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="color:#9ca3af;font-size:13px;padding:4px 0;">Active ingredient</td>
+                        <td style="color:#f9fafb;font-size:13px;padding:4px 0;">{{ drug.active_ingredient }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <p style="color:#9ca3af;font-size:13px;margin:0 0 16px 0;">
+                Please review this item in PharmaShelf and update stock or ordering status as needed.
+            </p>
+
+            <a href="{{ app_url }}" style="display:inline-block;padding:10px 18px;border-radius:999px;background:linear-gradient(90deg,#1d4ed8,#60a5fa);color:#f9fafb;font-size:14px;text-decoration:none;">
+                Open PharmaShelf
+            </a>
+        </div>
+
+        <p style="color:#6b7280;font-size:11px;margin-top:16px;text-align:center;">
+            This is an automated message from PharmaShelf.
+        </p>
+    </div>
+</body>
+</html>
