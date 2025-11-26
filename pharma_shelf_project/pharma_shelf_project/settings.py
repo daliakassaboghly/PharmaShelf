@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-^cdi)@j5_vvhq*jl0zd$8@2qeu^2jrb@zs%tpxax--pg7bj3*b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["pharmashelf.daliakassaboghly.online","127.0.0.1","localhost",]
 
 
 # Application definition
